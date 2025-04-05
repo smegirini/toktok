@@ -1,0 +1,400 @@
+{% extends "layouts/admin_base.html" %}
+
+{% block title %}알림 관리{% endblock %}
+
+{% block admin_content %}
+<!-- 관리자 헤더 -->
+<div class="admin-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="admin-title">알림 관리</h1>
+            <p class="admin-subtitle">시스템의 모든 알림을 관리하세요.</p>
+        </div>
+        <div class="admin-actions">
+            <button class="btn btn-light me-2" onclick="markAllAsRead()">
+                <i class="fas fa-check-double"></i> 모두 읽음 표시
+            </button>
+            <button class="btn btn-primary" onclick="refreshNotifications()">
+                <i class="fas fa-sync-alt"></i> 새로고침
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 필터 -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="card-header">
+            <h5 class="card-title">알림 필터</h5>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">알림 유형</label>
+                <select class="form-select" id="typeFilter" onchange="filterNotifications()">
+                    <option value="all" selected>전체</option>
+                    <option value="proposal">제안</option>
+                    <option value="comment">댓글</option>
+                    <option value="status">상태 변경</option>
+                    <option value="system">시스템</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">읽음 상태</label>
+                <select class="form-select" id="readFilter" onchange="filterNotifications()">
+                    <option value="all" selected>전체</option>
+                    <option value="unread">읽지 않음</option>
+                    <option value="read">읽음</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">기간</label>
+                <select class="form-select" id="periodFilter" onchange="filterNotifications()">
+                    <option value="all" selected>전체 기간</option>
+                    <option value="today">오늘</option>
+                    <option value="week">이번 주</option>
+                    <option value="month">이번 달</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">정렬</label>
+                <select class="form-select" id="sortFilter" onchange="filterNotifications()">
+                    <option value="newest" selected>최신순</option>
+                    <option value="oldest">오래된순</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 읽지 않은 알림 -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="card-header">
+            <h5 class="card-title">읽지 않은 알림</h5>
+        </div>
+        <div class="notification-list">
+            <div class="notification-item unread">
+                <div class="notification-content">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            새로운 제안이 등록되었습니다.
+                            <span class="badge bg-primary">제안</span>
+                        </div>
+                        <div class="notification-time">방금 전</div>
+                    </div>
+                    <div class="notification-text">홍길동님이 "업무 프로세스 개선 제안"을 등록했습니다.</div>
+                    <div class="notification-actions mt-3">
+                        <button class="btn btn-sm btn-primary" onclick="viewDetails(1)">
+                            <i class="fas fa-eye"></i> 상세보기
+                        </button>
+                        <button class="btn btn-sm btn-light" onclick="markAsRead(1)">
+                            <i class="fas fa-check"></i> 읽음 표시
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="notification-item unread">
+                <div class="notification-content">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            새로운 댓글이 작성되었습니다.
+                            <span class="badge bg-info">댓글</span>
+                        </div>
+                        <div class="notification-time">10분 전</div>
+                    </div>
+                    <div class="notification-text">김철수님이 회의실 예약 시스템 개선 제안에 댓글을 남겼습니다.</div>
+                    <div class="notification-actions mt-3">
+                        <button class="btn btn-sm btn-primary" onclick="viewDetails(2)">
+                            <i class="fas fa-eye"></i> 상세보기
+                        </button>
+                        <button class="btn btn-sm btn-light" onclick="markAsRead(2)">
+                            <i class="fas fa-check"></i> 읽음 표시
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 읽은 알림 -->
+<div class="card">
+    <div class="card-body">
+        <div class="card-header">
+            <h5 class="card-title">읽은 알림</h5>
+        </div>
+        <div class="notification-list">
+            <div class="notification-item">
+                <div class="notification-content">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            제안 상태가 변경되었습니다.
+                            <span class="badge bg-success">상태 변경</span>
+                        </div>
+                        <div class="notification-time">1시간 전</div>
+                    </div>
+                    <div class="notification-text">"업무 프로세스 개선 제안"이 승인되었습니다.</div>
+                    <div class="notification-actions mt-3">
+                        <button class="btn btn-sm btn-primary" onclick="viewDetails(3)">
+                            <i class="fas fa-eye"></i> 상세보기
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="notification-item">
+                <div class="notification-content">
+                    <div class="notification-header">
+                        <div class="notification-title">
+                            시스템 알림
+                            <span class="badge bg-secondary">시스템</span>
+                        </div>
+                        <div class="notification-time">2시간 전</div>
+                    </div>
+                    <div class="notification-text">시스템 점검이 예정되어 있습니다. (2024-03-15 23:00 ~ 2024-03-16 02:00)</div>
+                    <div class="notification-actions mt-3">
+                        <button class="btn btn-sm btn-primary" onclick="viewDetails(4)">
+                            <i class="fas fa-eye"></i> 상세보기
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 페이지네이션 -->
+<nav class="d-flex justify-content-center mt-4">
+    <ul class="pagination">
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">이전</a>
+        </li>
+        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+            <a class="page-link" href="#">다음</a>
+        </li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block page_css %}
+<style>
+    .admin-header {
+        margin-bottom: 2rem;
+    }
+
+    .admin-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+
+    .admin-subtitle {
+        color: var(--text-secondary);
+        margin-bottom: 0;
+    }
+
+    .card {
+        background: var(--surface-color);
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        border: none;
+    }
+
+    .card-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .notification-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .notification-item {
+        background: var(--surface-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .notification-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .notification-item.unread {
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .notification-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .notification-title {
+        font-weight: 500;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .notification-time {
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .notification-text {
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+
+    .notification-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .badge {
+        padding: 0.5em 0.75em;
+        font-weight: 500;
+        border-radius: 6px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        padding: 0.75rem 1rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+    }
+
+    .btn-light {
+        background-color: var(--surface-color);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .btn-light:hover {
+        background-color: var(--surface-hover);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .pagination {
+        gap: 0.25rem;
+    }
+
+    .page-link {
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+    }
+
+    .page-link:hover {
+        background-color: var(--surface-hover);
+        border-color: var(--border-color);
+        color: var(--text-primary);
+    }
+
+    .page-item.active .page-link {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+        .admin-title {
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .notification-item {
+            padding: 1rem;
+        }
+
+        .notification-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block page_js %}
+<script>
+// 알림 필터링
+function filterNotifications() {
+    const type = document.getElementById('typeFilter').value;
+    const read = document.getElementById('readFilter').value;
+    const period = document.getElementById('periodFilter').value;
+    const sort = document.getElementById('sortFilter').value;
+    
+    console.log('Filtering notifications...', { type, read, period, sort });
+    // 실제 필터링 로직 구현
+}
+
+// 알림 상세보기
+function viewDetails(id) {
+    console.log('Viewing notification details...', id);
+    // 상세보기 로직 구현
+}
+
+// 알림 읽음 표시
+function markAsRead(id) {
+    console.log('Marking notification as read...', id);
+    // 읽음 표시 로직 구현
+}
+
+// 모든 알림 읽음 표시
+function markAllAsRead() {
+    console.log('Marking all notifications as read...');
+    // 전체 읽음 표시 로직 구현
+}
+
+// 알림 새로고침
+function refreshNotifications() {
+    console.log('Refreshing notifications...');
+    // 새로고침 로직 구현
+}
+</script>
+{% endblock %} 

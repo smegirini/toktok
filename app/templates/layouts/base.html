@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}한국타이어 제안 시스템{% endblock %} - 제안 관리 시스템</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 관리자 공통 CSS -->
+    <link href="/static/css/admin.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #4F46E5;
+            --primary-dark: #4338CA;
+            --primary-light: #818CF8;
+            --secondary-color: #10B981;
+            --accent-color: #F59E0B;
+            --background-color: #F9FAFB;
+            --surface-color: #FFFFFF;
+            --text-primary: #111827;
+            --text-secondary: #4B5563;
+            --border-color: #E5E7EB;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: var(--surface-color) !important;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--text-secondary) !important;
+            padding: 0.5rem 1rem !important;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+            background-color: rgba(79, 70, 229, 0.1);
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        main {
+            min-height: calc(100vh - 200px);
+            padding: 2rem 0;
+        }
+
+        .card {
+            border: none;
+            border-radius: 16px;
+            background: var(--surface-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            background: var(--surface-color);
+            color: var(--text-secondary);
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* 애니메이션 효과 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* 관리자 네비게이션 스타일 */
+        .admin-nav {
+            background: var(--surface-color);
+            border-radius: 1rem;
+            padding: 1rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            margin: 1rem 0;
+        }
+
+        .nav-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 1rem;
+            padding-bottom: 0.5rem;
+            scrollbar-width: thin;
+            scrollbar-color: #dee2e6 transparent;
+        }
+
+        .nav-scroll::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .nav-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .nav-scroll::-webkit-scrollbar-thumb {
+            background-color: #dee2e6;
+            border-radius: 3px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #f8f9fa;
+            color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .nav-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-item i {
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .admin-nav {
+                margin: 0 -1rem;
+                border-radius: 0;
+            }
+            
+            .nav-scroll {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">한국타이어 제안 시스템</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/proposals">제안 목록</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/rankings">순위</a>
+                    </li>
+                    <li class="nav-item admin-only">
+                        <a class="nav-link" href="/admin">관리자</a>
+                    </li>
+                </ul>
+                <div class="d-flex gap-2">
+                    <div class="logged-out-menu">
+                        <a href="/login" class="btn btn-outline-primary me-2">로그인</a>
+                        <a href="/register" class="btn btn-primary">회원가입</a>
+                    </div>
+                    <div class="logged-in-menu" style="display: none;">
+                        <a href="/profile" class="btn btn-outline-primary me-2">내 프로필</a>
+                        <button id="logout-btn" class="btn btn-outline-danger">로그아웃</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="container fade-in">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 푸터 -->
+    <footer>
+        <div class="container text-center">
+            <p class="mb-0">&copy; 2024 한국타이어 제안 시스템. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="/static/js/main.js"></script>
+    
+    <script>
+        // 페이지 로드 완료 시 관리자 상태 확인 (onload 이벤트보다 더 확실하게)
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded 이벤트에서 관리자 상태 확인 시작');
+            checkAdminStatus();
+            
+            // 추가 체크 - 관리자 로그인 상태가 UI에 반영되지 않았을 경우를 위한 안전장치
+            setTimeout(function() {
+                const isAdmin = localStorage.getItem('is_admin') === 'true';
+                if (isAdmin) {
+                    console.log('지연된 체크: 관리자 상태가 true입니다. UI 확인 중...');
+                    const adminElements = document.querySelectorAll('.admin-only');
+                    let needsRefresh = false;
+                    
+                    adminElements.forEach((el, i) => {
+                        if (el.style.display !== 'block') {
+                            console.log(`관리자 요소 #${i}가 표시되지 않음, 강제 표시`);
+                            el.style.display = 'block';
+                            needsRefresh = true;
+                        }
+                    });
+                    
+                    if (needsRefresh) {
+                        console.log('UI 업데이트가 필요하여 변경 사항 적용');
+                    }
+                }
+            }, 300);
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html> 

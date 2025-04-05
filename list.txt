@@ -1,0 +1,54 @@
+카카오톡을 통해 데이터를 수집하여 시스템에 입력하기 위해서는 각 테이블에 필요한 핵심 정보를 정리해야 합니다. 다음은 각 주요 데이터 유형별로 수집해야 할 필수 값들입니다:
+1. 사용자(Users) 정보
+사용자명(username): 로그인에 사용될 고유 아이디
+이메일(email): 사용자 이메일 주소
+사번(employee_id): 회사 내 고유 사번
+이름(full_name): 사용자 실명
+비밀번호(password): 초기 비밀번호 (시스템에서 해싱 처리)
+부서(department): 소속 부서명
+직위(position): 직급/직책
+
+2. 제안(Proposals) 정보
+제목(title): 제안의 제목
+내용(content): 제안 상세 내용
+카테고리(category): 제안 유형 (품질/안전/효율성/비용/환경/기타)
+작성자(user_id 또는 employee_id): 제안자 식별 정보
+부서(department): 제안이 속한 부서
+기대효과(expected_effect): 예상되는 효과 설명
+예상 효과 금액(benefit_amount): 경제적 가치 추정액
+
+3. 투표(Votes) 정보
+사용자(user_id 또는 employee_id): 투표자 식별 정보
+제안(proposal_id 또는 title): 어떤 제안에 투표했는지
+투표 값(vote_value): 찬성(1) 또는 반대(-1)
+
+4. 댓글(Comments) 정보
+사용자(user_id 또는 employee_id): 댓글 작성자
+제안(proposal_id 또는 title): 어떤 제안에 댓글을 달았는지
+내용(content): 댓글 내용
+상위 댓글(parent_id): 대댓글인 경우 부모 댓글 ID (선택사항)
+
+5. 첨부 파일(Attachments) 정보
+제안(proposal_id 또는 title): 어떤 제안에 첨부되는지
+파일명(filename): 첨부 파일 이름
+파일 타입(file_type): 파일의 유형(jpg, pdf 등)
+
+6. 배지(Badges) 정보
+이름(name): 배지 이름
+설명(description): 배지 획득 조건 및 의미 설명
+포인트(points): 배지 획득 시 부여되는 포인트
+
+7. 사용자 배지(User_Badges) 정보
+사용자(user_id 또는 employee_id): 배지 소유자
+배지(badge_id 또는 name): 획득한 배지
+카카오톡 메시지 형식 예시
+사용자 정보 수집:
+Apply
+제안 정보 수집:
+Apply
+투표 정보 수집:
+Apply
+댓글 정보 수집:
+Apply
+이런 형식으로 카카오톡 메시지를 받아서 파싱한 후, 필요한 정보를 데이터베이스에 저장할 수 있습니다. 메시지 앞에 #명령어를 붙여서 어떤 종류의 데이터인지 구분하고, 각 항목은 '키: 값' 형태로 구성하면 파싱하기 쉽습니다.
+메시지를 처리하는 시스템에서는 이런 텍스트 메시지를 파싱하여 데이터베이스에 적절히 저장하는 로직을 구현해야 합니다. 또한, 해당 정보가 유효한지 검증하는 과정도 필요합니다.

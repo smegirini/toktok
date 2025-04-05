@@ -1,0 +1,767 @@
+{% extends "layouts/admin_base.html" %}
+
+{% block title %}관리자 대시보드{% endblock %}
+
+{% block admin_content %}
+<!-- 관리자 헤더 -->
+<div class="admin-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="admin-title">관리자 대시보드</h1>
+            <p class="admin-subtitle">시스템 개요와 주요 지표를 확인하세요.</p>
+        </div>
+        <div class="admin-actions">
+            <button class="btn btn-light me-2" onclick="refreshDashboard()">
+                <i class="fas fa-sync-alt"></i> 데이터 새로고침
+            </button>
+            <button class="btn btn-primary" onclick="generateReport()">
+                <i class="fas fa-download"></i> 보고서 내보내기
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 필터 섹션 -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-3">
+                <label for="periodFilter" class="form-label">기간 선택</label>
+                <select class="form-select" id="periodFilter">
+                    <option value="today">오늘</option>
+                    <option value="yesterday">어제</option>
+                    <option value="last7days">최근 7일</option>
+                    <option value="last30days">최근 30일</option>
+                    <option value="last3months">최근 3개월</option>
+                    <option value="last6months">최근 6개월</option>
+                    <option value="lastYear">최근 1년</option>
+                    <option value="all" selected>전체 기간</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="departmentFilter" class="form-label">부서</label>
+                <select class="form-select" id="departmentFilter">
+                    <option value="">모든 부서</option>
+                    <option value="생산1팀">생산1팀</option>
+                    <option value="생산2팀">생산2팀</option>
+                    <option value="품질관리팀">품질관리팀</option>
+                    <option value="R&D팀">R&D팀</option>
+                    <option value="안전관리팀">안전관리팀</option>
+                    <option value="경영지원팀">경영지원팀</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="categoryFilter" class="form-label">카테고리</label>
+                <select class="form-select" id="categoryFilter">
+                    <option value="">모든 카테고리</option>
+                    <option value="품질 개선">품질 개선</option>
+                    <option value="안전 개선">안전 개선</option>
+                    <option value="효율성 개선">효율성 개선</option>
+                    <option value="비용 절감">비용 절감</option>
+                    <option value="환경 개선">환경 개선</option>
+                    <option value="기타">기타</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button class="btn btn-primary w-100" id="applyFilterBtn">
+                    <i class="fas fa-filter"></i> 필터 적용
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 통계 카드 -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="stat-icon bg-primary-light">
+                            <i class="fas fa-lightbulb text-primary"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h3 class="mb-1" id="totalProposals">128</h3>
+                        <p class="text-secondary mb-0">총 제안수</p>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up"></i> 12%
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="stat-icon bg-success-light">
+                            <i class="fas fa-check-circle text-success"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h3 class="mb-1" id="approvedProposals">76</h3>
+                        <p class="text-secondary mb-0">승인된 제안</p>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up"></i> 8%
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="stat-icon bg-info-light">
+                            <i class="fas fa-gear text-info"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h3 class="mb-1" id="implementedProposals">42</h3>
+                        <p class="text-secondary mb-0">구현된 제안</p>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up"></i> 15%
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-shrink-0">
+                        <div class="stat-icon bg-warning-light">
+                            <i class="fas fa-users text-warning"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h3 class="mb-1" id="totalUsers">87</h3>
+                        <p class="text-secondary mb-0">총 사용자수</p>
+                        <small class="text-success">
+                            <i class="fas fa-arrow-up"></i> 5%
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 상위 참여자 및 부서별 통계 -->
+<div class="row g-4 mb-4">
+    <!-- 상위 참여자 -->
+    <div class="col-md-6">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5>상위 참여자</h5>
+                <div class="chart-actions">
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-primary active" data-metric="proposal_count">제안수</button>
+                        <button type="button" class="btn btn-outline-primary" data-metric="approved_count">승인수</button>
+                        <button type="button" class="btn btn-outline-primary" data-metric="implementation_rate">구현률</button>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container">
+                    <canvas id="topContributorsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 부서별 제안 통계 -->
+    <div class="col-md-6">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5>부서별 제안 통계</h5>
+                <div class="chart-actions">
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-primary active" data-view="count">제안수</button>
+                        <button type="button" class="btn btn-outline-primary" data-view="percentage">비율</button>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container">
+                    <canvas id="departmentChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 차트 섹션 -->
+<div class="row g-4 mb-4">
+    <!-- 카테고리별 제안 -->
+    <div class="col-md-6">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5>카테고리별 제안</h5>
+                <div class="chart-actions">
+                    <button class="btn btn-sm btn-outline-primary" id="exportCategoryDataBtn">
+                        <i class="bi bi-download me-1"></i>데이터 내보내기
+                    </button>
+                </div>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 월별 추이 -->
+    <div class="col-md-6">
+        <div class="chart-card">
+            <div class="chart-header">
+                <h5>월별 추이</h5>
+                <div class="chart-actions">
+                    <div class="btn-group btn-group-sm">
+                        <button type="button" class="btn btn-outline-primary active" data-metric="proposals">제안수</button>
+                        <button type="button" class="btn btn-outline-primary" data-metric="users">사용자수</button>
+                        <button type="button" class="btn btn-outline-primary" data-metric="implementation">구현률</button>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-body">
+                <div class="chart-container">
+                    <canvas id="monthlyTrendChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 개인별 상세 참여 통계 -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="table-card">
+            <div class="table-header">
+                <h5>개인별 참여 통계</h5>
+                <div class="table-actions">
+                    <div class="input-group input-group-sm me-2" style="width: 250px;">
+                        <input type="text" class="form-control" placeholder="이름 또는 부서로 검색" id="userSearchInput">
+                        <button class="btn btn-outline-primary" type="button" id="userSearchBtn">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                    <button class="btn btn-sm btn-outline-primary" id="exportStatsBtn">
+                        <i class="bi bi-file-earmark-excel me-1"></i>엑셀로 내보내기
+                    </button>
+                </div>
+            </div>
+            <div class="table-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>이름</th>
+                                <th>부서</th>
+                                <th>직급</th>
+                                <th>제안수</th>
+                                <th>승인률</th>
+                                <th>구현률</th>
+                                <th>포인트</th>
+                                <th>순위</th>
+                                <th>활동 지수</th>
+                                <th>액션</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userStatsTableBody">
+                            <!-- 통계 데이터가 동적으로 로드됩니다 -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <div class="table-info">
+                        <span id="statsPageInfo">1 - 10 / 100</span>
+                    </div>
+                    <div class="table-pagination">
+                        <button class="btn btn-sm btn-outline-primary" id="prevStatsPageBtn">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary" id="nextStatsPageBtn">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 최근 활동 요약 -->
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="activity-card">
+            <div class="activity-header">
+                <h5>최근 활동</h5>
+                <div class="activity-actions">
+                    <button class="btn btn-sm btn-outline-primary" id="viewAllActivitiesBtn">
+                        모든 활동 보기
+                    </button>
+                </div>
+            </div>
+            <div class="activity-body">
+                <div class="activity-timeline" id="recentActivities">
+                    <!-- 최근 활동 목록이 동적으로 로드됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_css %}
+<style>
+    /* 관리자 대시보드 스타일 */
+    .admin-dashboard {
+        padding: 2rem;
+    }
+
+    .admin-header {
+        margin-bottom: 2rem;
+    }
+
+    .admin-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+
+    .admin-nav {
+        background: var(--surface-color);
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        padding: 0.5rem;
+        margin-bottom: 2rem;
+        overflow-x: auto;
+    }
+
+    .nav-scroll {
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.25rem;
+    }
+
+    .nav-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1.25rem;
+        border-radius: 8px;
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .nav-item:hover {
+        background-color: rgba(79, 70, 229, 0.1);
+        color: var(--primary-color);
+    }
+
+    .nav-item.active {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .filter-card {
+        background: var(--surface-color);
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--surface-color);
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-right: 1rem;
+    }
+
+    .bg-primary-light {
+        background-color: rgba(79, 70, 229, 0.1);
+    }
+
+    .bg-success-light {
+        background-color: rgba(16, 185, 129, 0.1);
+    }
+
+    .bg-info-light {
+        background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    .bg-warning-light {
+        background-color: rgba(245, 158, 11, 0.1);
+    }
+
+    .stat-content {
+        flex: 1;
+    }
+
+    .stat-content h3 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-content p {
+        color: var(--text-secondary);
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-trend {
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .stat-trend.positive {
+        color: #10B981;
+    }
+
+    .stat-trend.negative {
+        color: #EF4444;
+    }
+
+    .chart-card, .table-card, .activity-card {
+        background: var(--surface-color);
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        height: 100%;
+    }
+
+    .chart-header, .table-header, .activity-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chart-header h5, .table-header h5, .activity-header h5 {
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .chart-body, .table-body, .activity-body {
+        padding: 1.5rem;
+    }
+
+    .chart-container {
+        height: 300px;
+    }
+
+    .table-footer {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .activity-timeline {
+        position: relative;
+    }
+
+    .activity-item {
+        display: flex;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        flex-shrink: 0;
+    }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        font-weight: 500;
+        margin-bottom: 0.25rem;
+    }
+
+    .activity-time {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+    }
+
+    @media (max-width: 768px) {
+        .admin-dashboard {
+            padding: 1rem;
+        }
+
+        .admin-title {
+            font-size: 1.5rem;
+        }
+
+        .stat-card {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .stat-icon {
+            margin-right: 0;
+            margin-bottom: 1rem;
+        }
+
+        .chart-container {
+            height: 250px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block page_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 관리자 로그인 상태 확인
+    const isAdmin = localStorage.getItem('is_admin') === 'true';
+    if (!isAdmin) {
+        alert('관리자 로그인이 필요합니다.');
+        window.location.href = '/login';
+        return;
+    }
+
+    // 통계 데이터 가져오기 (현재는 더미 데이터 사용)
+    const dashboardData = {
+        total_proposals: 128,
+        approved_proposals: 76,
+        implemented_proposals: 42,
+        total_users: 87,
+        proposal_categories: {
+            labels: ['품질 개선', '안전 개선', '효율성 개선', '비용 절감', '환경 개선', '기타'],
+            data: [32, 28, 24, 18, 12, 14]
+        },
+        departments: {
+            labels: ['생산1팀', '생산2팀', '품질관리팀', 'R&D팀', '안전관리팀', '경영지원팀'],
+            data: [35, 28, 22, 18, 12, 13]
+        },
+        monthly_trend: {
+            labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            proposals: [8, 12, 15, 10, 18, 22, 25, 20, 16, 14, 12, 10],
+            users: [5, 8, 12, 15, 18, 22, 25, 28, 30, 32, 35, 38]
+        },
+        top_contributors: {
+            labels: ['홍길동', '김철수', '이영희', '박지성', '최영수'],
+            data: [28, 22, 18, 15, 12]
+        },
+        recent_activities: [
+            { type: 'proposal', user: '홍길동', action: '새 제안을 등록했습니다', time: '10분 전', icon: 'bi-lightbulb' },
+            { type: 'approval', user: '관리자', action: '제안을 승인했습니다', time: '30분 전', icon: 'bi-check-circle' },
+            { type: 'implementation', user: '김철수', action: '제안이 구현되었습니다', time: '1시간 전', icon: 'bi-gear' },
+            { type: 'user', user: '이영희', action: '회원가입을 했습니다', time: '2시간 전', icon: 'bi-person-plus' },
+            { type: 'comment', user: '박지성', action: '제안에 댓글을 남겼습니다', time: '3시간 전', icon: 'bi-chat-dots' }
+        ]
+    };
+
+    // 통계 카드 업데이트
+    document.getElementById('totalProposals').textContent = dashboardData.total_proposals;
+    document.getElementById('approvedProposals').textContent = dashboardData.approved_proposals;
+    document.getElementById('implementedProposals').textContent = dashboardData.implemented_proposals;
+    document.getElementById('totalUsers').textContent = dashboardData.total_users;
+
+    // 카테고리 차트
+    const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+    const categoryChart = new Chart(categoryCtx, {
+        type: 'doughnut',
+        data: {
+            labels: dashboardData.proposal_categories.labels,
+            datasets: [{
+                data: dashboardData.proposal_categories.data,
+                backgroundColor: [
+                    '#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#3B82F6', '#8B5CF6'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right'
+                }
+            }
+        }
+    });
+
+    // 부서별 차트
+    const departmentCtx = document.getElementById('departmentChart').getContext('2d');
+    const departmentChart = new Chart(departmentCtx, {
+        type: 'bar',
+        data: {
+            labels: dashboardData.departments.labels,
+            datasets: [{
+                label: '제안 수',
+                data: dashboardData.departments.data,
+                backgroundColor: '#4F46E5',
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // 월별 추이 차트
+    const monthlyCtx = document.getElementById('monthlyTrendChart').getContext('2d');
+    const monthlyChart = new Chart(monthlyCtx, {
+        type: 'line',
+        data: {
+            labels: dashboardData.monthly_trend.labels,
+            datasets: [{
+                label: '제안 수',
+                data: dashboardData.monthly_trend.proposals,
+                borderColor: '#4F46E5',
+                backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // 상위 참여자 차트
+    const contributorsCtx = document.getElementById('topContributorsChart').getContext('2d');
+    const contributorsChart = new Chart(contributorsCtx, {
+        type: 'bar',
+        data: {
+            labels: dashboardData.top_contributors.labels,
+            datasets: [{
+                label: '제안 수',
+                data: dashboardData.top_contributors.data,
+                backgroundColor: '#4F46E5',
+                borderRadius: 4
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // 최근 활동 목록 업데이트
+    const recentActivitiesContainer = document.getElementById('recentActivities');
+    recentActivitiesContainer.innerHTML = '';
+    
+    dashboardData.recent_activities.forEach(activity => {
+        const activityItem = document.createElement('div');
+        activityItem.className = 'activity-item';
+        activityItem.innerHTML = `
+            <div class="activity-icon">
+                <i class="bi ${activity.icon}"></i>
+            </div>
+            <div class="activity-content">
+                <div class="activity-title">${activity.user} ${activity.action}</div>
+                <div class="activity-time">${activity.time}</div>
+            </div>
+        `;
+        recentActivitiesContainer.appendChild(activityItem);
+    });
+
+    // 필터 적용 버튼 이벤트
+    document.getElementById('applyFilterBtn').addEventListener('click', function() {
+        // 필터 적용 로직 (실제로는 API 호출 등)
+        alert('필터가 적용되었습니다. (데모)');
+    });
+
+    // 데이터 새로고침 버튼 이벤트
+    document.getElementById('refreshDataBtn').addEventListener('click', function() {
+        // 데이터 새로고침 로직 (실제로는 API 호출 등)
+        alert('데이터가 새로고침되었습니다. (데모)');
+    });
+
+    // 보고서 내보내기 버튼 이벤트
+    document.getElementById('exportReportBtn').addEventListener('click', function() {
+        // 보고서 내보내기 로직 (실제로는 API 호출 등)
+        alert('보고서가 내보내기되었습니다. (데모)');
+    });
+
+    // 차트 메트릭 변경 이벤트
+    document.querySelectorAll('[data-metric]').forEach(button => {
+        button.addEventListener('click', function() {
+            // 메트릭 변경 로직 (실제로는 차트 데이터 업데이트 등)
+            document.querySelectorAll('[data-metric]').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+});
+</script>
+{% endblock %} 

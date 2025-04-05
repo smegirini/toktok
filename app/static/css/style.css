@@ -1,0 +1,164 @@
+/* 기본 스타일 */
+:root {
+    --primary-color: #00539C;
+    --secondary-color: #EEA904;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --dark-color: #343a40;
+    --light-color: #f8f9fa;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.navbar-dark .navbar-brand {
+    font-weight: 700;
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-header {
+    font-weight: bold;
+    background-color: rgba(0, 83, 156, 0.1);
+}
+
+.btn-primary {
+    background-color: #0062cc;
+    border-color: #0062cc;
+}
+
+.btn-primary:hover {
+    background-color: #005cbf;
+    border-color: #005cbf;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+/* 제안 관련 스타일 */
+.proposal-item {
+    margin-bottom: 1.5rem;
+}
+
+.proposal-item .badge {
+    font-size: 0.8rem;
+}
+
+.status-draft {
+    background-color: #6c757d;
+}
+
+.status-submitted {
+    background-color: #17a2b8;
+}
+
+.status-approved {
+    background-color: #28a745;
+}
+
+.status-rejected {
+    background-color: #dc3545;
+}
+
+.status-implemented {
+    background-color: #6610f2;
+}
+
+/* 로그인 및 회원가입 폼 */
+.auth-form {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 순위 테이블 */
+.ranking-table th, .ranking-table td {
+    vertical-align: middle;
+}
+
+.ranking-position {
+    font-weight: bold;
+    font-size: 1.2rem;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.position-1 {
+    background-color: gold;
+    color: #333;
+}
+
+.position-2 {
+    background-color: silver;
+    color: #333;
+}
+
+.position-3 {
+    background-color: #cd7f32;
+    color: white;
+}
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+    .auth-form {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+}
+
+.admin-dashboard .card {
+    margin-bottom: 20px;
+}
+
+.admin-dashboard .stat-card {
+    text-align: center;
+    padding: 20px;
+}
+
+.admin-dashboard .stat-card h3 {
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.admin-dashboard .chart-container {
+    padding: 15px;
+    height: 300px;
+}
+
+.pagination .page-link {
+    color: #0062cc;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0062cc;
+    border-color: #0062cc;
+} 

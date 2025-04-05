@@ -1,0 +1,318 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <!-- 페이지 헤더 -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>제안 목록</h2>
+        <a href="/proposals/new" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> 새 제안
+        </a>
+    </div>
+    
+    <!-- 필터링 및 검색 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form id="filter-form">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="search" class="form-label">검색</label>
+                        <input type="text" class="form-control" id="search" placeholder="제목 또는 내용 검색">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="status" class="form-label">상태</label>
+                        <select class="form-select" id="status">
+                            <option value="">모든 상태</option>
+                            <option value="draft">임시저장</option>
+                            <option value="submitted">제출됨</option>
+                            <option value="under_review">검토 중</option>
+                            <option value="approved">승인됨</option>
+                            <option value="rejected">반려됨</option>
+                            <option value="implemented">구현됨</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="department" class="form-label">부서</label>
+                        <select class="form-select" id="department">
+                            <option value="">모든 부서</option>
+                            <option value="연구개발">연구개발</option>
+                            <option value="생산">생산</option>
+                            <option value="품질관리">품질관리</option>
+                            <option value="인사">인사</option>
+                            <option value="재무">재무</option>
+                            <option value="영업">영업</option>
+                            <option value="마케팅">마케팅</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">필터 적용</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 정렬 및 표시 옵션 -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex align-items-center">
+            <label for="sort-by" class="me-2">정렬:</label>
+            <select class="form-select form-select-sm" id="sort-by" style="width: auto;">
+                <option value="created_date_desc">최신순</option>
+                <option value="created_date_asc">오래된순</option>
+                <option value="title_asc">제목 (ㄱ-ㅎ)</option>
+                <option value="title_desc">제목 (ㅎ-ㄱ)</option>
+                <option value="points_desc">포인트 높은순</option>
+            </select>
+        </div>
+        <div>
+            <button class="btn btn-sm btn-outline-secondary me-2" id="view-grid">
+                <i class="bi bi-grid"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-secondary active" id="view-list">
+                <i class="bi bi-list-ul"></i>
+            </button>
+        </div>
+    </div>
+    
+    <!-- 알림 메시지 컨테이너 -->
+    <div id="alert-container"></div>
+    
+    <!-- 제안 목록 -->
+    <div id="proposals-container">
+        <div class="list-view">
+            <!-- 제안 항목 -->
+            <div class="card proposal-item mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="card-title mb-1">
+                            <a href="/proposals/1" class="text-decoration-none">타이어 생산 공정 개선 방안</a>
+                        </h5>
+                        <span class="badge bg-success">승인됨</span>
+                    </div>
+                    <p class="card-text text-muted small mb-2">제출일: 2023-11-20 | 부서: 생산 | 제출자: 홍길동</p>
+                    <p class="card-text">타이어 생산 공정에서 발생하는 불량률을 줄이기 위한 새로운 방법을 제안합니다. 이 방법은 기존 공정의 온도 제어 시스템을 개선하여...</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <span class="badge bg-secondary me-2">생산</span>
+                            <span class="badge bg-secondary me-2">공정개선</span>
+                            <span class="badge bg-secondary">품질</span>
+                        </div>
+                        <div class="text-primary">
+                            <i class="bi bi-heart-fill me-1"></i> 15
+                            <i class="bi bi-chat-dots-fill ms-3 me-1"></i> 8
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card proposal-item mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="card-title mb-1">
+                            <a href="/proposals/2" class="text-decoration-none">사내 복지 프로그램 개선안</a>
+                        </h5>
+                        <span class="badge bg-info">검토 중</span>
+                    </div>
+                    <p class="card-text text-muted small mb-2">제출일: 2023-11-15 | 부서: 인사 | 제출자: 김철수</p>
+                    <p class="card-text">직원들의 만족도를 높이고 업무 효율을 개선하기 위한 새로운 복지 프로그램을 제안합니다. 이 프로그램은 유연 근무제와 건강 관리 지원을...</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <span class="badge bg-secondary me-2">인사</span>
+                            <span class="badge bg-secondary me-2">복지</span>
+                            <span class="badge bg-secondary">직원만족</span>
+                        </div>
+                        <div class="text-primary">
+                            <i class="bi bi-heart-fill me-1"></i> 23
+                            <i class="bi bi-chat-dots-fill ms-3 me-1"></i> 12
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card proposal-item mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="card-title mb-1">
+                            <a href="/proposals/3" class="text-decoration-none">친환경 타이어 소재 도입 방안</a>
+                        </h5>
+                        <span class="badge bg-warning text-dark">임시저장</span>
+                    </div>
+                    <p class="card-text text-muted small mb-2">제출일: 2023-11-10 | 부서: 연구개발 | 제출자: 이영희</p>
+                    <p class="card-text">환경 친화적인 새로운 타이어 소재 도입을 통해 제품의 친환경성을 높이고 글로벌 환경 규제에 대응하는 방안을 제안합니다...</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <span class="badge bg-secondary me-2">연구개발</span>
+                            <span class="badge bg-secondary me-2">친환경</span>
+                            <span class="badge bg-secondary">소재</span>
+                        </div>
+                        <div class="text-primary">
+                            <i class="bi bi-heart-fill me-1"></i> 8
+                            <i class="bi bi-chat-dots-fill ms-3 me-1"></i> 3
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card proposal-item mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <h5 class="card-title mb-1">
+                            <a href="/proposals/4" class="text-decoration-none">에너지 절약 시스템 도입</a>
+                        </h5>
+                        <span class="badge bg-secondary">반려됨</span>
+                    </div>
+                    <p class="card-text text-muted small mb-2">제출일: 2023-11-05 | 부서: 생산 | 제출자: 박민수</p>
+                    <p class="card-text">공장 내 에너지 사용량을 줄이기 위한 새로운 시스템 도입을 제안합니다. 이 시스템은 생산 설비의 대기 모드 관리와 조명 시스템 최적화를...</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <span class="badge bg-secondary me-2">생산</span>
+                            <span class="badge bg-secondary me-2">에너지</span>
+                            <span class="badge bg-secondary">지속가능성</span>
+                        </div>
+                        <div class="text-primary">
+                            <i class="bi bi-heart-fill me-1"></i> 5
+                            <i class="bi bi-chat-dots-fill ms-3 me-1"></i> 7
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 페이지네이션 -->
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">이전</a>
+            </li>
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">다음</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<style>
+    /* 그리드 뷰 스타일 */
+    .grid-view {
+        display: none;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    .grid-view .proposal-item {
+        height: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const gridBtn = document.getElementById('view-grid');
+        const listBtn = document.getElementById('view-list');
+        const proposalsContainer = document.getElementById('proposals-container');
+        const filterForm = document.getElementById('filter-form');
+        const sortBy = document.getElementById('sort-by');
+        
+        // 그리드/리스트 뷰 전환
+        gridBtn.addEventListener('click', function() {
+            proposalsContainer.querySelector('.list-view').style.display = 'none';
+            if (!proposalsContainer.querySelector('.grid-view')) {
+                const gridView = document.createElement('div');
+                gridView.className = 'grid-view';
+                gridView.innerHTML = proposalsContainer.querySelector('.list-view').innerHTML;
+                proposalsContainer.appendChild(gridView);
+            }
+            proposalsContainer.querySelector('.grid-view').style.display = 'grid';
+            gridBtn.classList.add('active');
+            listBtn.classList.remove('active');
+        });
+        
+        listBtn.addEventListener('click', function() {
+            if (proposalsContainer.querySelector('.grid-view')) {
+                proposalsContainer.querySelector('.grid-view').style.display = 'none';
+            }
+            proposalsContainer.querySelector('.list-view').style.display = 'block';
+            listBtn.classList.add('active');
+            gridBtn.classList.remove('active');
+        });
+        
+        // 필터 폼 제출 처리
+        filterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            fetchProposals();
+        });
+        
+        // 정렬 변경시 처리
+        sortBy.addEventListener('change', function() {
+            fetchProposals();
+        });
+        
+        // 제안 데이터 가져오기 함수
+        async function fetchProposals() {
+            const search = document.getElementById('search').value;
+            const status = document.getElementById('status').value;
+            const department = document.getElementById('department').value;
+            const sort = sortBy.value;
+            
+            try {
+                // URL 쿼리 파라미터 구성
+                const params = new URLSearchParams();
+                if (search) params.append('search', search);
+                if (status) params.append('status', status);
+                if (department) params.append('department', department);
+                params.append('sort', sort);
+                
+                // API 호출
+                const response = await fetch(`/api/v1/proposals?${params.toString()}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('제안 목록을 가져오는 중 오류가 발생했습니다.');
+                }
+                
+                const data = await response.json();
+                
+                // 여기서 데이터를 사용하여 제안 목록을 업데이트합니다.
+                // 실제 구현에서는 이 부분에 데이터를 화면에 표시하는 코드가 들어갑니다.
+                showAlert('필터가 적용되었습니다.', 'success');
+                
+            } catch (error) {
+                showAlert(error.message, 'danger');
+            }
+        }
+        
+        // 알림 메시지 표시 함수
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.role = 'alert';
+            
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="닫기"></button>
+            `;
+            
+            alertContainer.appendChild(alertDiv);
+            
+            // 3초 후 자동으로 알림 제거
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                setTimeout(() => {
+                    alertContainer.removeChild(alertDiv);
+                }, 300);
+            }, 3000);
+        }
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,227 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- 히어로 섹션 -->
+    <div class="hero-section text-center py-5 mb-5 fade-in">
+        <div class="hero-content">
+            <h1 class="display-4 fw-bold mb-4">한국타이어 제안 시스템</h1>
+            <p class="lead mb-4 text-secondary">여러분의 혁신적인 아이디어로 더 나은 미래를 만들어갑니다</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="/proposals" class="btn btn-primary btn-lg">
+                    <i class="bi bi-list-ul me-2"></i>제안 목록 보기
+                </a>
+                <a href="/proposals/new" class="btn btn-outline-primary btn-lg">
+                    <i class="bi bi-plus-circle me-2"></i>새 제안하기
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 통계 섹션 -->
+    <div class="stats-section mb-5">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="stat-icon mb-3">
+                            <i class="bi bi-lightbulb"></i>
+                        </div>
+                        <h3 class="stat-number mb-2">{{ total_proposals }}</h3>
+                        <p class="stat-label text-secondary">총 제안 수</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="stat-icon mb-3">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <h3 class="stat-number mb-2">{{ total_users }}</h3>
+                        <p class="stat-label text-secondary">참여 인원</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <div class="stat-icon mb-3">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <h3 class="stat-number mb-2">{{ implemented_proposals }}</h3>
+                        <p class="stat-label text-secondary">실행된 제안</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 최근 제안 섹션 -->
+    <div class="recent-proposals mb-5">
+        <div class="section-header d-flex justify-content-between align-items-center mb-4">
+            <h2 class="section-title">최근 제안</h2>
+            <a href="/proposals" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-right me-2"></i>모든 제안 보기
+            </a>
+        </div>
+        <div class="row g-4">
+            {% for proposal in recent_proposals %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 proposal-card">
+                    <div class="card-body">
+                        <div class="proposal-category mb-3">
+                            <span class="badge bg-primary">{{ proposal.category }}</span>
+                        </div>
+                        <h5 class="card-title text-truncate mb-2">{{ proposal.title }}</h5>
+                        <p class="card-text text-secondary small mb-3">{{ proposal.created_at.strftime('%Y-%m-%d') }}</p>
+                        <p class="card-text proposal-content">{{ proposal.content[:100] }}...</p>
+                        <div class="proposal-footer">
+                            <a href="/proposals/{{ proposal.id }}" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-arrow-right me-1"></i>자세히 보기
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 순위 섹션 -->
+    <div class="rankings-section mb-5">
+        <div class="section-header text-center mb-4">
+            <h2 class="section-title">이달의 TOP 제안자</h2>
+            <p class="text-secondary">가장 많은 제안을 하고 높은 점수를 받은 제안자들입니다</p>
+        </div>
+        <div class="row g-4">
+            {% for user in top_users %}
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <div class="user-avatar mb-3">
+                            {{ user.name[:1] }}
+                        </div>
+                        <h5 class="card-title mb-1">{{ user.name }}</h5>
+                        <p class="text-secondary mb-2">제안 {{ user.proposal_count }}개</p>
+                        <p class="points-badge">{{ user.points }}점</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .hero-section {
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(79, 70, 229, 0.05));
+        border-radius: 24px;
+        padding: 4rem 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .hero-content {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .stat-icon {
+        width: 64px;
+        height: 64px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin: 0 auto;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .stat-label {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+    }
+
+    .proposal-card {
+        border: 1px solid var(--border-color);
+    }
+
+    .proposal-category .badge {
+        padding: 0.5em 1em;
+        border-radius: 20px;
+        font-weight: 500;
+    }
+
+    .proposal-content {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .user-avatar {
+        width: 64px;
+        height: 64px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 auto;
+    }
+
+    .points-badge {
+        display: inline-block;
+        padding: 0.5em 1em;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 20px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 3rem 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // 메인 페이지 관련 JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        // 페이지에 특화된 초기화 코드
+    });
+</script>
+{% endblock %} 

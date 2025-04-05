@@ -1,0 +1,227 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm border-0 mt-5 mb-5">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h3 class="mb-0">회원가입</h3>
+                </div>
+                <div class="card-body p-4">
+                    <!-- 알림 메시지 컨테이너 -->
+                    <div id="alert-container"></div>
+                    
+                    <form id="register-form" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="username" class="form-label">사용자 이름 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                                <div class="invalid-feedback">
+                                    사용자 이름을 입력해주세요.
+                                </div>
+                                <div class="form-text">영문, 숫자 조합 5-20자</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">이메일 <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="invalid-feedback">
+                                    유효한 이메일 주소를 입력해주세요.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="password" class="form-label">비밀번호 <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                                <div class="invalid-feedback">
+                                    비밀번호를 입력해주세요.
+                                </div>
+                                <div class="form-text">최소 8자, 영문, 숫자, 특수문자 포함</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="confirm-password" class="form-label">비밀번호 확인 <span class="text-danger">*</span></label>
+                                <input type="password" class="form-control" id="confirm-password" name="confirm-password" required>
+                                <div class="invalid-feedback">
+                                    비밀번호 확인을 입력해주세요.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="full-name" class="form-label">이름 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="full-name" name="full-name" required>
+                                <div class="invalid-feedback">
+                                    이름을 입력해주세요.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="employee-id" class="form-label">사원번호 <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="employee-id" name="employee-id" required>
+                                <div class="invalid-feedback">
+                                    사원번호를 입력해주세요.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="department" class="form-label">부서 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="department" name="department" required>
+                                    <option value="" selected disabled>부서 선택</option>
+                                    <option value="연구개발">연구개발</option>
+                                    <option value="생산">생산</option>
+                                    <option value="품질관리">품질관리</option>
+                                    <option value="인사">인사</option>
+                                    <option value="재무">재무</option>
+                                    <option value="영업">영업</option>
+                                    <option value="마케팅">마케팅</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    부서를 선택해주세요.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="position" class="form-label">직책 <span class="text-danger">*</span></label>
+                                <select class="form-select" id="position" name="position" required>
+                                    <option value="" selected disabled>직책 선택</option>
+                                    <option value="사원">사원</option>
+                                    <option value="대리">대리</option>
+                                    <option value="과장">과장</option>
+                                    <option value="차장">차장</option>
+                                    <option value="부장">부장</option>
+                                    <option value="이사">이사</option>
+                                    <option value="상무">상무</option>
+                                    <option value="전무">전무</option>
+                                    <option value="사장">사장</option>
+                                </select>
+                                <div class="invalid-feedback">
+                                    직책을 선택해주세요.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+                            <label class="form-check-label" for="terms">
+                                <span class="text-danger">*</span> 이용약관 및 개인정보처리방침에 동의합니다.
+                            </label>
+                            <div class="invalid-feedback">
+                                이용약관에 동의해야 합니다.
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary py-2">회원가입</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer bg-white text-center py-3">
+                    <p class="mb-0">이미 계정이 있으신가요? <a href="/login" class="text-primary">로그인</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 폼 제출 처리
+        const registerForm = document.getElementById('register-form');
+        if (registerForm) {
+            registerForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (!this.checkValidity()) {
+                    e.stopPropagation();
+                    this.classList.add('was-validated');
+                    return;
+                }
+                
+                // 비밀번호 일치 확인
+                const password = document.getElementById('password').value;
+                const passwordConfirm = document.getElementById('confirm-password').value;
+                
+                if (password !== passwordConfirm) {
+                    showAlert('비밀번호가 일치하지 않습니다.', 'danger');
+                    return;
+                }
+                
+                // 폼 데이터 수집
+                const formData = {
+                    username: document.getElementById('username').value,
+                    email: document.getElementById('email').value,
+                    password: password,
+                    confirm_password: passwordConfirm,
+                    full_name: document.getElementById('full-name').value,
+                    employee_id: document.getElementById('employee-id').value,
+                    department: document.getElementById('department').value,
+                    position: document.getElementById('position').value
+                };
+                
+                console.log('회원가입 시도:', formData);
+                
+                try {
+                    // API 호출
+                    console.log('회원가입 API 요청 시작...');
+                    const response = await fetch('/api/v1/auth/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(formData),
+                        credentials: 'include'
+                    });
+                    
+                    console.log('회원가입 응답 상태:', response.status);
+                    const data = await response.json();
+                    console.log('회원가입 응답 데이터:', data);
+                    
+                    if (!response.ok) {
+                        throw new Error(data.detail || '회원가입 중 오류가 발생했습니다.');
+                    }
+                    
+                    // 성공 메시지 표시
+                    showAlert('회원가입에 성공했습니다. 로그인 페이지로 이동합니다.', 'success');
+                    
+                    // 로그인 페이지로 리다이렉트
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                    
+                } catch (error) {
+                    // 오류 메시지 표시
+                    showAlert(error.message, 'danger');
+                }
+            });
+        }
+        
+        // 알림 메시지 표시 함수
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.role = 'alert';
+            
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="닫기"></button>
+            `;
+            
+            alertContainer.appendChild(alertDiv);
+            
+            // 3초 후 자동으로 알림 제거
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                setTimeout(() => {
+                    alertContainer.removeChild(alertDiv);
+                }, 300);
+            }, 3000);
+        }
+    });
+</script>
+{% endblock %} 

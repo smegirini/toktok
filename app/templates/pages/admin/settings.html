@@ -1,0 +1,313 @@
+{% extends "layouts/admin_base.html" %}
+
+{% block title %}설정{% endblock %}
+
+{% block admin_content %}
+<!-- 관리자 헤더 -->
+<div class="admin-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="admin-title">시스템 설정</h1>
+            <p class="admin-subtitle">시스템의 주요 설정을 관리하세요.</p>
+        </div>
+        <div class="admin-actions">
+            <button class="btn btn-primary" onclick="saveSettings()">
+                <i class="fas fa-save"></i> 설정 저장
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 일반 설정 -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="card-header">
+            <h5 class="card-title">일반 설정</h5>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">시스템 이름</label>
+                <input type="text" class="form-control" id="systemName" value="제안 관리 시스템">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">관리자 이메일</label>
+                <input type="email" class="form-control" id="adminEmail" value="admin@example.com">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">페이지당 항목 수</label>
+                <select class="form-select" id="itemsPerPage">
+                    <option value="10">10개</option>
+                    <option value="20" selected>20개</option>
+                    <option value="30">30개</option>
+                    <option value="50">50개</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">날짜 형식</label>
+                <select class="form-select" id="dateFormat">
+                    <option value="YYYY-MM-DD" selected>YYYY-MM-DD</option>
+                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 알림 설정 -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="card-header">
+            <h5 class="card-title">알림 설정</h5>
+        </div>
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+            <label class="form-check-label" for="emailNotifications">이메일 알림 사용</label>
+        </div>
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="newProposalAlert" checked>
+            <label class="form-check-label" for="newProposalAlert">새 제안 알림</label>
+        </div>
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="commentAlert" checked>
+            <label class="form-check-label" for="commentAlert">댓글 알림</label>
+        </div>
+        <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="statusChangeAlert" checked>
+            <label class="form-check-label" for="statusChangeAlert">상태 변경 알림</label>
+        </div>
+    </div>
+</div>
+
+<!-- 포인트 설정 -->
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="card-header">
+            <h5 class="card-title">포인트 설정</h5>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">제안 등록 포인트</label>
+                <input type="number" class="form-control" id="proposalPoints" value="100">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">제안 승인 포인트</label>
+                <input type="number" class="form-control" id="approvalPoints" value="500">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">실행 완료 포인트</label>
+                <input type="number" class="form-control" id="implementationPoints" value="1000">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">댓글 작성 포인트</label>
+                <input type="number" class="form-control" id="commentPoints" value="10">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 카테고리 관리 -->
+<div class="card">
+    <div class="card-body">
+        <div class="card-header">
+            <h5 class="card-title">카테고리 관리</h5>
+        </div>
+        <div class="row g-3">
+            <div class="col-12">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" id="newCategory" placeholder="새 카테고리 이름">
+                    <button class="btn btn-primary" onclick="addCategory()">
+                        <i class="fas fa-plus"></i> 추가
+                    </button>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="category-list" id="categoryList">
+                    <div class="category-item">
+                        <span>제품 개선</span>
+                        <button class="btn btn-sm btn-danger" onclick="removeCategory(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="category-item">
+                        <span>서비스 개선</span>
+                        <button class="btn btn-sm btn-danger" onclick="removeCategory(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="category-item">
+                        <span>업무 프로세스</span>
+                        <button class="btn btn-sm btn-danger" onclick="removeCategory(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="category-item">
+                        <span>기타</span>
+                        <button class="btn btn-sm btn-danger" onclick="removeCategory(this)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block page_css %}
+<style>
+    .admin-header {
+        margin-bottom: 2rem;
+    }
+
+    .admin-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+    }
+
+    .admin-subtitle {
+        color: var(--text-secondary);
+        margin-bottom: 0;
+    }
+
+    .card {
+        background: var(--surface-color);
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        border: none;
+    }
+
+    .card-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .category-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .category-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: var(--surface-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        padding: 0.75rem 1rem;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+    }
+
+    .form-check-input:checked {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+
+    @media (max-width: 768px) {
+        .admin-title {
+            font-size: 1.5rem;
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .category-list {
+            gap: 0.5rem;
+        }
+
+        .category-item {
+            padding: 0.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block page_js %}
+<script>
+// 설정 저장
+function saveSettings() {
+    const settings = {
+        systemName: document.getElementById('systemName').value,
+        adminEmail: document.getElementById('adminEmail').value,
+        itemsPerPage: document.getElementById('itemsPerPage').value,
+        dateFormat: document.getElementById('dateFormat').value,
+        emailNotifications: document.getElementById('emailNotifications').checked,
+        newProposalAlert: document.getElementById('newProposalAlert').checked,
+        commentAlert: document.getElementById('commentAlert').checked,
+        statusChangeAlert: document.getElementById('statusChangeAlert').checked,
+        proposalPoints: document.getElementById('proposalPoints').value,
+        approvalPoints: document.getElementById('approvalPoints').value,
+        implementationPoints: document.getElementById('implementationPoints').value,
+        commentPoints: document.getElementById('commentPoints').value
+    };
+    
+    console.log('Saving settings...', settings);
+    alert('설정이 저장되었습니다.');
+}
+
+// 카테고리 추가
+function addCategory() {
+    const input = document.getElementById('newCategory');
+    const categoryName = input.value.trim();
+    
+    if (categoryName) {
+        const categoryList = document.getElementById('categoryList');
+        const categoryItem = document.createElement('div');
+        categoryItem.className = 'category-item';
+        categoryItem.innerHTML = `
+            <span>${categoryName}</span>
+            <button class="btn btn-sm btn-danger" onclick="removeCategory(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        categoryList.appendChild(categoryItem);
+        input.value = '';
+    }
+}
+
+// 카테고리 제거
+function removeCategory(button) {
+    if (confirm('이 카테고리를 삭제하시겠습니까?')) {
+        button.closest('.category-item').remove();
+    }
+}
+</script>
+{% endblock %} 

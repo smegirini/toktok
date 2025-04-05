@@ -1,0 +1,563 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <!-- 페이지 헤더 -->
+    <div class="text-center mb-5">
+        <h2 class="mb-3">한국타이어 제안 랭킹</h2>
+        <p class="lead">창의적인 아이디어와 적극적인 참여로 회사 발전에 기여한 직원들을 소개합니다.</p>
+    </div>
+    
+    <!-- 알림 메시지 컨테이너 -->
+    <div id="alert-container"></div>
+    
+    <!-- 랭킹 기간 선택 -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form id="filter-form" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="period" class="form-label">기간 선택</label>
+                    <select class="form-select" id="period">
+                        <option value="week">이번 주</option>
+                        <option value="month" selected>이번 달</option>
+                        <option value="quarter">이번 분기</option>
+                        <option value="year">올해</option>
+                        <option value="all">전체 기간</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="category" class="form-label">카테고리</label>
+                    <select class="form-select" id="category">
+                        <option value="points" selected>포인트</option>
+                        <option value="proposals">제안 수</option>
+                        <option value="implemented">구현된 제안</option>
+                        <option value="liked">좋아요 수</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary w-100">적용</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 상위 랭킹 (1-3위) -->
+    <div class="row mb-5">
+        <!-- 2위 -->
+        <div class="col-md-4 d-flex align-items-end order-md-1 order-2">
+            <div class="card ranking-card ranking-second w-100">
+                <div class="card-body text-center pt-5 pb-4">
+                    <div class="ranking-badge second mb-3">2</div>
+                    <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="프로필 이미지">
+                    <h4 class="mb-1">김철수</h4>
+                    <p class="text-muted mb-2">연구개발부 | 대전공장</p>
+                    <h3 class="text-primary">870 포인트</h3>
+                    <p class="mb-0">제안: 15개 | 구현: 5개</p>
+                </div>
+                <div class="card-footer bg-light py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-success">전월 대비 +3</span>
+                        <a href="/profile/user2" class="btn btn-sm btn-outline-primary">프로필 보기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 1위 -->
+        <div class="col-md-4 order-md-2 order-1 mb-4 mb-md-0">
+            <div class="card ranking-card ranking-first w-100">
+                <div class="crown-icon">
+                    <i class="bi bi-award-fill"></i>
+                </div>
+                <div class="card-body text-center pt-5 pb-4">
+                    <div class="ranking-badge first mb-3">1</div>
+                    <img src="https://via.placeholder.com/180" class="rounded-circle mb-3" alt="프로필 이미지">
+                    <h3 class="mb-1">홍길동</h3>
+                    <p class="text-muted mb-2">생산부 | 대전공장</p>
+                    <h2 class="text-primary">1,250 포인트</h2>
+                    <p class="mb-0">제안: 23개 | 구현: 8개</p>
+                </div>
+                <div class="card-footer bg-light py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-success">전월 대비 +1</span>
+                        <a href="/profile/user1" class="btn btn-sm btn-outline-primary">프로필 보기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 3위 -->
+        <div class="col-md-4 d-flex align-items-end order-md-3 order-3">
+            <div class="card ranking-card ranking-third w-100">
+                <div class="card-body text-center pt-5 pb-4">
+                    <div class="ranking-badge third mb-3">3</div>
+                    <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="프로필 이미지">
+                    <h4 class="mb-1">이영희</h4>
+                    <p class="text-muted mb-2">품질관리부 | 금산공장</p>
+                    <h3 class="text-primary">720 포인트</h3>
+                    <p class="mb-0">제안: 12개 | 구현: 4개</p>
+                </div>
+                <div class="card-footer bg-light py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-danger">전월 대비 -1</span>
+                        <a href="/profile/user3" class="btn btn-sm btn-outline-primary">프로필 보기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 4-10위 랭킹 테이블 -->
+    <div class="card">
+        <div class="card-header bg-white">
+            <h4 class="card-title mb-0">상위 랭킹</h4>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover ranking-table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center" style="width: 70px;">순위</th>
+                            <th>사용자</th>
+                            <th>부서</th>
+                            <th>공장</th>
+                            <th class="text-center">제안 수</th>
+                            <th class="text-center">구현 수</th>
+                            <th class="text-center">포인트</th>
+                            <th class="text-center">변동</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">4</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="프로필">
+                                    <div>
+                                        <h6 class="mb-0">박민수</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>인사부</td>
+                            <td>대전공장</td>
+                            <td class="text-center">10</td>
+                            <td class="text-center">3</td>
+                            <td class="text-center fw-bold">590</td>
+                            <td class="text-center">
+                                <span class="badge bg-success">+2</span>
+                            </td>
+                            <td class="text-end">
+                                <a href="/profile/user4" class="btn btn-sm btn-outline-primary">보기</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">5</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="프로필">
+                                    <div>
+                                        <h6 class="mb-0">최재원</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>품질관리부</td>
+                            <td>금산공장</td>
+                            <td class="text-center">9</td>
+                            <td class="text-center">2</td>
+                            <td class="text-center fw-bold">510</td>
+                            <td class="text-center">
+                                <span class="badge bg-success">+1</span>
+                            </td>
+                            <td class="text-end">
+                                <a href="/profile/user5" class="btn btn-sm btn-outline-primary">보기</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">6</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="프로필">
+                                    <div>
+                                        <h6 class="mb-0">정동훈</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>연구개발부</td>
+                            <td>대전공장</td>
+                            <td class="text-center">8</td>
+                            <td class="text-center">2</td>
+                            <td class="text-center fw-bold">480</td>
+                            <td class="text-center">
+                                <span class="badge bg-secondary">0</span>
+                            </td>
+                            <td class="text-end">
+                                <a href="/profile/user6" class="btn btn-sm btn-outline-primary">보기</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">7</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="프로필">
+                                    <div>
+                                        <h6 class="mb-0">김서연</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>마케팅부</td>
+                            <td>대전공장</td>
+                            <td class="text-center">7</td>
+                            <td class="text-center">2</td>
+                            <td class="text-center fw-bold">430</td>
+                            <td class="text-center">
+                                <span class="badge bg-danger">-2</span>
+                            </td>
+                            <td class="text-end">
+                                <a href="/profile/user7" class="btn btn-sm btn-outline-primary">보기</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">8</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="프로필">
+                                    <div>
+                                        <h6 class="mb-0">이준호</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>생산부</td>
+                            <td>금산공장</td>
+                            <td class="text-center">6</td>
+                            <td class="text-center">2</td>
+                            <td class="text-center fw-bold">390</td>
+                            <td class="text-center">
+                                <span class="badge bg-success">+5</span>
+                            </td>
+                            <td class="text-end">
+                                <a href="/profile/user8" class="btn btn-sm btn-outline-primary">보기</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">9</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="프로필">
+                                    <div>
+                                        <h6 class="mb-0">박지원</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>영업부</td>
+                            <td>대전공장</td>
+                            <td class="text-center">5</td>
+                            <td class="text-center">1</td>
+                            <td class="text-center fw-bold">350</td>
+                            <td class="text-center">
+                                <span class="badge bg-danger">-1</span>
+                            </td>
+                            <td class="text-end">
+                                <a href="/profile/user9" class="btn btn-sm btn-outline-primary">보기</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">10</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="프로필">
+                                    <div>
+                                        <h6 class="mb-0">최현우</h6>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>재무부</td>
+                            <td>대전공장</td>
+                            <td class="text-center">4</td>
+                            <td class="text-center">1</td>
+                            <td class="text-center fw-bold">320</td>
+                            <td class="text-center">
+                                <span class="badge bg-success">+2</span>
+                            </td>
+                            <td class="text-end">
+                                <a href="/profile/user10" class="btn btn-sm btn-outline-primary">보기</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-muted">총 참여자: 65명</span>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary btn-sm" id="load-more-rankings">더 보기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 부서별 통계 -->
+    <div class="card mt-4">
+        <div class="card-header bg-white">
+            <h4 class="card-title mb-0">부서별 현황</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <canvas id="departmentChart" height="300"></canvas>
+                </div>
+                <div class="col-md-6">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>부서</th>
+                                    <th class="text-center">제안 수</th>
+                                    <th class="text-center">구현 수</th>
+                                    <th class="text-center">총 포인트</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>생산부</td>
+                                    <td class="text-center">45</td>
+                                    <td class="text-center">18</td>
+                                    <td class="text-center">2,580</td>
+                                </tr>
+                                <tr>
+                                    <td>연구개발부</td>
+                                    <td class="text-center">32</td>
+                                    <td class="text-center">12</td>
+                                    <td class="text-center">1,950</td>
+                                </tr>
+                                <tr>
+                                    <td>품질관리부</td>
+                                    <td class="text-center">28</td>
+                                    <td class="text-center">10</td>
+                                    <td class="text-center">1,740</td>
+                                </tr>
+                                <tr>
+                                    <td>인사부</td>
+                                    <td class="text-center">15</td>
+                                    <td class="text-center">5</td>
+                                    <td class="text-center">920</td>
+                                </tr>
+                                <tr>
+                                    <td>마케팅부</td>
+                                    <td class="text-center">12</td>
+                                    <td class="text-center">4</td>
+                                    <td class="text-center">780</td>
+                                </tr>
+                                <tr>
+                                    <td>영업부</td>
+                                    <td class="text-center">10</td>
+                                    <td class="text-center">3</td>
+                                    <td class="text-center">650</td>
+                                </tr>
+                                <tr>
+                                    <td>재무부</td>
+                                    <td class="text-center">8</td>
+                                    <td class="text-center">2</td>
+                                    <td class="text-center">520</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<style>
+    /* 랭킹 카드 스타일 */
+    .ranking-card {
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+    
+    .ranking-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+    
+    .ranking-first {
+        position: relative;
+        min-height: 100%;
+        z-index: 2;
+    }
+    
+    .crown-icon {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: gold;
+        font-size: 2.5rem;
+    }
+    
+    .ranking-badge {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        border-radius: 50%;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    
+    .ranking-badge.first {
+        background-color: gold;
+    }
+    
+    .ranking-badge.second {
+        background-color: silver;
+    }
+    
+    .ranking-badge.third {
+        background-color: #cd7f32; /* bronze */
+    }
+    
+    /* 테이블 스타일 */
+    .ranking-table th,
+    .ranking-table td {
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 필터 폼 제출 처리
+        const filterForm = document.getElementById('filter-form');
+        if (filterForm) {
+            filterForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const period = document.getElementById('period').value;
+                const category = document.getElementById('category').value;
+                
+                try {
+                    const response = await fetch(`/api/v1/rankings?period=${period}&category=${category}`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('랭킹 데이터를 가져오는 중 오류가 발생했습니다.');
+                    }
+                    
+                    const data = await response.json();
+                    // 여기서 랭킹 데이터를 업데이트하는 코드 추가
+                    
+                    showAlert('랭킹 필터가 적용되었습니다.', 'success');
+                    
+                } catch (error) {
+                    showAlert(error.message, 'danger');
+                }
+            });
+        }
+        
+        // 부서별 통계 차트 렌더링
+        const departmentChart = document.getElementById('departmentChart');
+        if (departmentChart) {
+            new Chart(departmentChart, {
+                type: 'bar',
+                data: {
+                    labels: ['생산부', '연구개발부', '품질관리부', '인사부', '마케팅부', '영업부', '재무부'],
+                    datasets: [{
+                        label: '총 포인트',
+                        data: [2580, 1950, 1740, 920, 780, 650, 520],
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.7)',
+                            'rgba(255, 99, 132, 0.7)',
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(153, 102, 255, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(201, 203, 207, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 99, 132)',
+                            'rgb(75, 192, 192)',
+                            'rgb(255, 206, 86)',
+                            'rgb(153, 102, 255)',
+                            'rgb(255, 159, 64)',
+                            'rgb(201, 203, 207)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+        
+        // 더 보기 버튼 클릭 이벤트
+        const loadMoreBtn = document.getElementById('load-more-rankings');
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', async function() {
+                try {
+                    // 현재 페이지 다음 페이지의 데이터를 가져오는 API 호출
+                    const response = await fetch('/api/v1/rankings?page=2', {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                        }
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('추가 랭킹 데이터를 가져오는 중 오류가 발생했습니다.');
+                    }
+                    
+                    const data = await response.json();
+                    // 추가 데이터를 테이블에 렌더링하는 코드 추가
+                    
+                } catch (error) {
+                    showAlert(error.message, 'danger');
+                }
+            });
+        }
+        
+        // 알림 메시지 표시 함수
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.role = 'alert';
+            
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="닫기"></button>
+            `;
+            
+            alertContainer.appendChild(alertDiv);
+            
+            // 3초 후 자동으로 알림 제거
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                setTimeout(() => {
+                    alertContainer.removeChild(alertDiv);
+                }, 300);
+            }, 3000);
+        }
+    });
+</script>
+{% endblock %} 

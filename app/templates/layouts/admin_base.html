@@ -1,0 +1,160 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<!-- 관리자 네비게이션 -->
+<div class="admin-nav mb-4">
+    <div class="nav-scroll">
+        <a href="/admin" class="nav-item {% if request.path == '/admin' %}active{% endif %}">
+            <i class="fas fa-tachometer-alt"></i> 대시보드
+        </a>
+        <a href="/admin/users" class="nav-item {% if request.path == '/admin/users' %}active{% endif %}">
+            <i class="fas fa-users"></i> 사용자 관리
+        </a>
+        <a href="/admin/proposals" class="nav-item {% if request.path == '/admin/proposals' %}active{% endif %}">
+            <i class="fas fa-lightbulb"></i> 제안 관리
+        </a>
+        <a href="/admin/statistics" class="nav-item {% if request.path == '/admin/statistics' %}active{% endif %}">
+            <i class="fas fa-chart-bar"></i> 통계 및 분석
+        </a>
+        <a href="/admin/settings" class="nav-item {% if request.path == '/admin/settings' %}active{% endif %}">
+            <i class="fas fa-cog"></i> 시스템 설정
+        </a>
+        <a href="/admin/notifications" class="nav-item {% if request.path == '/admin/notifications' %}active{% endif %}">
+            <i class="fas fa-bell"></i> 알림 관리
+        </a>
+    </div>
+</div>
+
+<!-- 관리자 콘텐츠 -->
+<div class="admin-content">
+    {% block admin_content %}{% endblock %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* 관리자 공통 스타일 */
+.admin-nav {
+    background: var(--surface-color);
+    border-radius: 1rem;
+    padding: 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin: 1rem 0;
+}
+
+.nav-scroll {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: #dee2e6 transparent;
+}
+
+.nav-scroll::-webkit-scrollbar {
+    height: 6px;
+}
+
+.nav-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.nav-scroll::-webkit-scrollbar-thumb {
+    background-color: #dee2e6;
+    border-radius: 3px;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.nav-item:hover {
+    background: #f8f9fa;
+    color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+.nav-item.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.nav-item i {
+    font-size: 1.1rem;
+}
+
+.admin-content {
+    padding: 1rem 0;
+}
+
+.admin-header {
+    margin-bottom: 2rem;
+}
+
+.admin-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.admin-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* 카드 스타일 */
+.card {
+    background: var(--surface-color);
+    border-radius: 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .admin-nav {
+        margin: 0 -1rem;
+        border-radius: 0;
+    }
+    
+    .nav-scroll {
+        padding: 0 1rem;
+    }
+    
+    .admin-content {
+        padding: 1rem;
+    }
+}
+</style>
+{% block page_css %}{% endblock %}
+{% endblock %}
+
+{% block extra_js %}
+{% block page_js %}{% endblock %}
+{% endblock %} 

@@ -1,0 +1,146 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">프로필</h5>
+                </div>
+                <div class="card-body text-center">
+                    <img src="/static/assets/images/avatar.jpg" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+                    <h5 class="my-3" id="fullName">홍길동</h5>
+                    <p class="text-muted mb-1" id="position">연구원</p>
+                    <p class="text-muted mb-4" id="department">품질관리팀</p>
+                    <div class="d-flex justify-content-center mb-2">
+                        <button type="button" class="btn btn-primary me-2" id="editProfileBtn">프로필 수정</button>
+                        <button type="button" class="btn btn-outline-primary" id="changePasswordBtn">비밀번호 변경</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">활동 요약</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6 text-center">
+                            <h2 id="totalProposals">0</h2>
+                            <p class="text-muted">총 제안</p>
+                        </div>
+                        <div class="col-6 text-center">
+                            <h2 id="totalPoints">0</h2>
+                            <p class="text-muted">총 포인트</p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6 text-center">
+                            <h2 id="implementedProposals">0</h2>
+                            <p class="text-muted">채택된 제안</p>
+                        </div>
+                        <div class="col-6 text-center">
+                            <h2 id="rank">-</h2>
+                            <p class="text-muted">현재 순위</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">사용자 정보</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">이름</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0" id="userFullName">홍길동</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">사번</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0" id="employeeId">HK12345</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">이메일</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0" id="userEmail">hong@example.com</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">부서</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0" id="userDepartment">품질관리팀</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">직위</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0" id="userPosition">연구원</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <p class="mb-0">등급</p>
+                        </div>
+                        <div class="col-sm-9">
+                            <p class="text-muted mb-0" id="userLevel">평민</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">내 제안 목록</h5>
+                    <a href="/proposals/new" class="btn btn-sm btn-primary">새 제안 작성</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>제목</th>
+                                    <th>카테고리</th>
+                                    <th>상태</th>
+                                    <th>작성일</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userProposalsTable">
+                                <!-- 사용자 제안 목록이 여기에 동적으로 로드됩니다 -->
+                                <tr class="no-proposals-row">
+                                    <td colspan="4" class="text-center py-3">아직 작성한 제안이 없습니다.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/profile.js"></script>
+{% endblock %} 
